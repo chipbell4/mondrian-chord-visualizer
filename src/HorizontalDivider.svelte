@@ -1,4 +1,9 @@
 <script>
+import { MONDRIAN_BLUE, MONDRIAN_RED } from "./colors";
+
+export let leftColor = MONDRIAN_BLUE;
+export let rightColor = MONDRIAN_RED;
+
 let container;
 let divider;
 
@@ -65,12 +70,12 @@ const moveDivider = (e) => {
     on:mouseleave={markDividerUnclicked}
     on:mousemove={moveDivider}
     >
-    <div class="left" style="flex: {leftFlex}"></div>
+    <div class="left" style="flex: {leftFlex}; background: {leftColor}"></div>
     <div class="divider"
         bind:this={divider}
         on:mousedown={markDividerClicked}
         role="button"
         tabindex="0"
         ></div>
-    <div class="right" style="flex: {rightFlex}"></div>
+    <div class="right" style="flex: {rightFlex}; background: {rightColor}"></div>
 </div>  
