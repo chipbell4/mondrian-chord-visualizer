@@ -8,9 +8,11 @@ export let config = {
     direction: HORIZONTAL,
     first: {
         color: MONDRIAN_BLUE,
+        weight: 1,
     },
     second: {
         color: MONDRIAN_RED,
+        weight: 1,
         children: null,
     }
 }
@@ -19,9 +21,6 @@ const dispatch = createEventDispatcher();
 
 let container;
 let divider;
-
-let firstFlex = 1;
-let secondFlex = 1;
 
 let dividerClicked = false;
 let offset = 0;
@@ -44,17 +43,17 @@ const moveDivider = (e) => {
 
     if (config.direction === VERTICAL) {
         const desiredDividerPosition = e.clientY - offset;
-        firstFlex = desiredDividerPosition;
-        secondFlex = containerRect.height - 20 - desiredDividerPosition;
+        config.first.weight = desiredDividerPosition;
+        config.second.weight = containerRect.height - 20 - desiredDividerPosition;
     } else {
         const desiredDividerPosition = e.clientX - offset;
-        firstFlex = desiredDividerPosition;
-        secondFlex = containerRect.width - 20 - desiredDividerPosition;
+        config.first.weight = desiredDividerPosition;
+        config.second.weight = containerRect.width - 20 - desiredDividerPosition;
     }
 
     dispatch("rescale", {
-        first: firstFlex,
-        second: secondFlex,
+        first: config.first.weight,
+        second: config.second.weight,
     });
 };
 
@@ -102,7 +101,7 @@ const moveDivider = (e) => {
     on:mouseleave={markDividerUnclicked}
     on:mousemove={moveDivider}
     >
-    <div class="left" style="flex: {firstFlex}; background: {config.first.color}">
+    <div class="left" style="flex: {config.first.weight}; background: {config.first.color}">
         {#if config.first.children !== null && config.first.children !== undefined}
             <svelte:self config={config.first.children} />
         {/if}
@@ -113,7 +112,7 @@ const moveDivider = (e) => {
         role="button"
         tabindex="0"
         ></div>
-    <div class="right" style="flex: {secondFlex}; background: {config.second.color}">
+    <div class="right" style="flex: {config.second.weight}; background: {config.second.color}">
         {#if config.second.children !== null && config.second.children !== undefined}
             <svelte:self config={config.second.children} />
         {/if}
