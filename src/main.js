@@ -17,7 +17,7 @@ document.addEventListener("click", () => {
     }
     
     if (!noteIsOn) {
-        generator.noteOn(220);
+        generator.play([220, 220 * 4 / 3, 220 * 3 / 2]);
         noteIsOn = true;
     } else {
         generator.noteOff();

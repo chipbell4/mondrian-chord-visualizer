@@ -1,10 +1,10 @@
 import { Lfo } from "./Lfo";
-import { Voice } from "./Voice";
+import { PolyphonicVoice } from "./PolyphonicVoice";
 
 export class Generator {
     context: AudioContext;
 
-    voice: Voice;
+    voice: PolyphonicVoice;
     lfo: Lfo;
     filter: BiquadFilterNode;
     adsrGain: GainNode;
@@ -13,11 +13,15 @@ export class Generator {
     constructor(context: AudioContext) {
         this.context = context;
 
-        this.voice = new Voice(this.context, {
-            voices: 8,
-            detune: 0.3,
-            type: "sawtooth",
-        })
+        this.voice = new PolyphonicVoice(this.context, {
+            polyphony: 10,
+            voiceConfig: {
+                voices: 8,
+                detune: 0.3,
+                type: "sawtooth",
+            }
+        });
+
         this.lfo = new Lfo(this.context);
         this.filter = new BiquadFilterNode(this.context, {
             type: "lowpass",
@@ -37,16 +41,19 @@ export class Generator {
         this.gain.connect(this.context.destination);
     }
 
-    noteOn(frequency: number) {
+    play(frequencies: number[]) {
         // Cancel any previous note on
-        this.noteOff();
+        this.pause();
+
+        // set the next notes
+        this.voice.frequencies = frequencies;
 
         // Reschedule a fade in
         const ATTACK = 0.75;
         this.adsrGain.gain.linearRampToValueAtTime(1.0, this.context.currentTime + ATTACK);
     }
 
-    noteOff() {
+    pause() {
         this.adsrGain.gain.cancelScheduledValues(0);
         this.adsrGain.gain.value = 0;
     }

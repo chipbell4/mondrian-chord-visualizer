@@ -11,12 +11,15 @@ export class Voice {
     oscillators: OscillatorNode[];
     gainNode: GainNode;
 
+    maxGain: number;
+
     constructor(context: AudioContext, config: VoiceConfig) {
         this.context = context;
         this.config = config;
+        this.maxGain = 1 / this.config.voices
 
         this.gainNode = new GainNode(context, {
-            gain: 1 / this.config.voices,
+            gain: this.maxGain,
         })
         this.oscillators = [];
         for (let i = 0; i < this.config.voices; i++) {
@@ -41,8 +44,12 @@ export class Voice {
         }
     }
 
-    get gain(): AudioParam {
-        return this.gainNode.gain;
+    mute() {
+        this.gainNode.gain.value = 0;
+    }
+
+    unmute() {
+        this.gainNode.gain.value = this.maxGain;
     }
 
     connect(node: AudioNode) {
