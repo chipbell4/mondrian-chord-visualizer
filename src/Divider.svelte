@@ -17,11 +17,43 @@ export let config = {
     }
 }
 
+// Child rescale management
 const dispatch = createEventDispatcher();
+function buildRescaleEvent(config) {
+    const event = {
+        first: {
+            weight: config.first.weight,
+        },
+        second: {
+            weight: config.second.weight,
+        }
+    };
 
+    if (config.first.children) {
+        event.first.children = buildRescaleEvent(config.first.children);
+    }
+
+    if (config.second.children) {
+        event.second.children = buildEvent(config.second.children);
+    }
+
+    return event;
+};
+const rescaleEvent = buildRescaleEvent(config);
+
+function firstChildRescaled(event) {
+    rescaleEvent.first.children = event.detail;
+    dispatch("rescale", rescaleEvent);
+}
+
+function secondChildRescaled(event) {
+    rescaleEvent.first.children = event.detail;
+    dispatch("rescale", rescaleEvent);
+};
+
+// Divider Event Handler
 let container;
 let divider;
-
 let dividerClicked = false;
 let offset = 0;
 const markDividerClicked = (e) => {
@@ -51,10 +83,9 @@ const moveDivider = (e) => {
         config.second.weight = containerRect.width - 20 - desiredDividerPosition;
     }
 
-    dispatch("rescale", {
-        first: config.first.weight,
-        second: config.second.weight,
-    });
+    rescaleEvent.first.weight = config.first.weight;
+    rescaleEvent.second.weight = config.second.weight;
+    dispatch("rescale", rescaleEvent);
 };
 
 </script>
@@ -103,7 +134,7 @@ const moveDivider = (e) => {
     >
     <div class="left" style="flex: {config.first.weight}; background: {config.first.color}">
         {#if config.first.children !== null && config.first.children !== undefined}
-            <svelte:self config={config.first.children} />
+            <svelte:self config={config.first.children} on:rescale={firstChildRescaled} />
         {/if}
     </div>
     <div class="divider"
@@ -114,7 +145,7 @@ const moveDivider = (e) => {
         ></div>
     <div class="right" style="flex: {config.second.weight}; background: {config.second.color}">
         {#if config.second.children !== null && config.second.children !== undefined}
-            <svelte:self config={config.second.children} />
+            <svelte:self config={config.second.children} on:rescale={secondChildRescaled} />
         {/if}
     </div>
 </div>  
