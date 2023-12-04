@@ -1,24 +1,17 @@
 <script>
 import { MONDRIAN_BLUE, MONDRIAN_RED, MONDRIAN_YELLOW } from "./colors";
-import { HORIZONTAL, VERTICAL, oppositeDirectionOf } from "./divider_direction";
+import { HORIZONTAL, VERTICAL } from "./divider_direction";
 
-export let direction = HORIZONTAL;
-export let first = {
-    color: MONDRIAN_BLUE,
-    children: {
-        first: {
-            color: MONDRIAN_YELLOW,
-        },
-        second: {
-            color: MONDRIAN_BLUE,
-        },
+export let config = {
+    direction: HORIZONTAL,
+    first: {
+        color: MONDRIAN_BLUE,
     },
-};
-
-export let second = {
-    color: MONDRIAN_RED,
-    children: null,
-};
+    second: {
+        color: MONDRIAN_RED,
+        children: null,
+    }
+}
 
 let container;
 let divider;
@@ -30,7 +23,7 @@ let dividerClicked = false;
 let offset = 0;
 const markDividerClicked = (e) => {
     dividerClicked = true;
-    if (direction === VERTICAL) {
+    if (config.direction === VERTICAL) {
         offset = e.clientY - divider.getBoundingClientRect().top;
     } else {
         offset = e.clientX - divider.getBoundingClientRect().left;
@@ -45,7 +38,7 @@ const moveDivider = (e) => {
 
     const containerRect = container.getBoundingClientRect();
 
-    if (direction === VERTICAL) {
+    if (config.direction === VERTICAL) {
         const desiredDividerPosition = e.clientY - offset;
         firstFlex = desiredDividerPosition;
         secondFlex = containerRect.height - 20 - desiredDividerPosition;
@@ -95,18 +88,14 @@ const moveDivider = (e) => {
 </style>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="container {direction}" bind:this={container}
+<div class="container {config.direction}" bind:this={container}
     on:mouseup={markDividerUnclicked}
     on:mouseleave={markDividerUnclicked}
     on:mousemove={moveDivider}
     >
-    <div class="left" style="flex: {firstFlex}; background: {first.color}">
-        {#if first.children !== null && first.children !== undefined}
-            <svelte:self
-                direction={oppositeDirectionOf(direction)} 
-                first={first.children.first}
-                second={first.children.second}
-                />
+    <div class="left" style="flex: {firstFlex}; background: {config.first.color}">
+        {#if config.first.children !== null && config.first.children !== undefined}
+            <svelte:self config={config.first.children} />
         {/if}
     </div>
     <div class="divider"
@@ -115,6 +104,9 @@ const moveDivider = (e) => {
         role="button"
         tabindex="0"
         ></div>
-    <div class="right" style="flex: {secondFlex}; background: {second.color}">
+    <div class="right" style="flex: {secondFlex}; background: {config.second.color}">
+        {#if config.second.children !== null && config.second.children !== undefined}
+            <svelte:self config={config.second.children} />
+        {/if}
     </div>
 </div>  
