@@ -9,13 +9,13 @@ export class Voice {
     config: VoiceConfig;
 
     oscillators: OscillatorNode[];
-    gain: GainNode;
+    gainNode: GainNode;
 
     constructor(context: AudioContext, config: VoiceConfig) {
         this.context = context;
         this.config = config;
 
-        this.gain = new GainNode(context, {
+        this.gainNode = new GainNode(context, {
             gain: 1 / this.config.voices,
         })
         this.oscillators = [];
@@ -25,7 +25,7 @@ export class Voice {
                 type: this.config.type,
             })
             this.oscillators.push(oscillator);
-            oscillator.connect(this.gain);
+            oscillator.connect(this.gainNode);
             oscillator.start(0);
         }
 
@@ -41,7 +41,11 @@ export class Voice {
         }
     }
 
+    get gain(): AudioParam {
+        return this.gainNode.gain;
+    }
+
     connect(node: AudioNode) {
-        this.gain.connect(node);
+        this.gainNode.connect(node);
     }
 }
