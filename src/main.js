@@ -10,8 +10,7 @@ document.addEventListener("click", () => {
     const context = new AudioContext();
     const generator = new Generator(context);
     
-    generator.frequency = 256;
-    generator.start();
+    generator.noteOn(220);
 });
 
 
