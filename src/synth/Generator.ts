@@ -1,9 +1,10 @@
 import { Lfo } from "./Lfo";
+import { Voice } from "./Voice";
 
 export class Generator {
     context: AudioContext;
 
-    oscillator: OscillatorNode;
+    voice: Voice;
     lfo: Lfo;
     filter: BiquadFilterNode;
     adsrGain: GainNode;
@@ -12,10 +13,11 @@ export class Generator {
     constructor(context: AudioContext) {
         this.context = context;
 
-        this.oscillator = new OscillatorNode(this.context, {
-            frequency: 256,
-            type: "square",
-        });
+        this.voice = new Voice(this.context, {
+            voices: 8,
+            detune: 0.3,
+            type: "sawtooth",
+        })
         this.lfo = new Lfo(this.context);
         this.filter = new BiquadFilterNode(this.context, {
             type: "lowpass",
@@ -27,18 +29,12 @@ export class Generator {
         })
         this.gain = new GainNode(this.context, {
             gain: 0.1,
-        })
+        });
 
-        setInterval(() => {
-            console.log("FILTER FREQUENCY:", this.filter.frequency.value);
-        }, 500);
-
-        this.oscillator.connect(this.filter);
+        this.voice.connect(this.filter);
         this.filter.connect(this.adsrGain);
         this.adsrGain.connect(this.gain);
         this.gain.connect(this.context.destination);
-
-        this.oscillator.start(0);
     }
 
     noteOn(frequency: number) {
