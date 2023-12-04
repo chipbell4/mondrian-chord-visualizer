@@ -4,7 +4,7 @@ import Divider from "./Divider.svelte";
 import { HORIZONTAL, VERTICAL } from "./divider_direction";
 
 const onRescale = (event) => {
-    console.log(event);
+    console.log(event.detail);
 };
 
 const initialConfig = {
