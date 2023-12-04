@@ -1,10 +1,24 @@
 <script>
-import { MONDRIAN_BLUE, MONDRIAN_RED } from "./colors";
-import { HORIZONTAL, VERTICAL } from "./divider_direction";
+import { MONDRIAN_BLUE, MONDRIAN_RED, MONDRIAN_YELLOW } from "./colors";
+import { HORIZONTAL, VERTICAL, oppositeDirectionOf } from "./divider_direction";
 
-export let firstColor = MONDRIAN_BLUE;
-export let secondColor = MONDRIAN_RED;
 export let direction = HORIZONTAL;
+export let first = {
+    color: MONDRIAN_BLUE,
+    children: {
+        first: {
+            color: MONDRIAN_YELLOW,
+        },
+        second: {
+            color: MONDRIAN_BLUE,
+        },
+    },
+};
+
+export let second = {
+    color: MONDRIAN_RED,
+    children: null,
+};
 
 let container;
 let divider;
@@ -57,24 +71,16 @@ const moveDivider = (e) => {
 .container.VERTICAL {
     flex-direction: column;
 
-    .left, .right, .divider {
-        width: 100%;
-    }
-
-    .divider {
-        max-height: 20px;
+    > .divider {
         height: 20px;
+        width: 100%;
     }
 }
 
 .container.HORIZONTAL {
     flex-direction: row;
 
-    .left, .right, .divider {
-        height: 100%;
-    }
-
-    .divider {
+    > .divider {
         width: 20px;
     }
 }
@@ -88,17 +94,27 @@ const moveDivider = (e) => {
 }
 </style>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="container {direction}" bind:this={container}
     on:mouseup={markDividerUnclicked}
     on:mouseleave={markDividerUnclicked}
     on:mousemove={moveDivider}
     >
-    <div class="left" style="flex: {firstFlex}; background: {firstColor}"></div>
+    <div class="left" style="flex: {firstFlex}; background: {first.color}">
+        {#if first.children !== null && first.children !== undefined}
+            <svelte:self
+                direction={oppositeDirectionOf(direction)} 
+                first={first.children.first}
+                second={first.children.second}
+                />
+        {/if}
+    </div>
     <div class="divider"
         bind:this={divider}
         on:mousedown={markDividerClicked}
         role="button"
         tabindex="0"
         ></div>
-    <div class="right" style="flex: {secondFlex}; background: {secondColor}"></div>
+    <div class="right" style="flex: {secondFlex}; background: {second.color}">
+    </div>
 </div>  
