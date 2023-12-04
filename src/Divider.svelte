@@ -3,22 +3,8 @@ import { MONDRIAN_BLUE, MONDRIAN_RED, MONDRIAN_YELLOW } from "./colors";
 import { HORIZONTAL, VERTICAL, oppositeDirectionOf } from "./divider_direction";
 
 export let direction = HORIZONTAL;
-export let first = {
-    color: MONDRIAN_BLUE,
-    children: {
-        first: {
-            color: MONDRIAN_YELLOW,
-        },
-        second: {
-            color: MONDRIAN_BLUE,
-        },
-    },
-};
-
-export let second = {
-    color: MONDRIAN_RED,
-    children: null,
-};
+export let firstColor = MONDRIAN_BLUE;
+export let secondColor = MONDRIAN_RED;
 
 let container;
 let divider;
@@ -100,14 +86,8 @@ const moveDivider = (e) => {
     on:mouseleave={markDividerUnclicked}
     on:mousemove={moveDivider}
     >
-    <div class="left" style="flex: {firstFlex}; background: {first.color}">
-        {#if first.children !== null && first.children !== undefined}
-            <svelte:self
-                direction={oppositeDirectionOf(direction)} 
-                first={first.children.first}
-                second={first.children.second}
-                />
-        {/if}
+    <div class="left" style="flex: {firstFlex}; background: {firstColor}">
+        <slot name="first"></slot>
     </div>
     <div class="divider"
         bind:this={divider}
@@ -115,6 +95,7 @@ const moveDivider = (e) => {
         role="button"
         tabindex="0"
         ></div>
-    <div class="right" style="flex: {secondFlex}; background: {second.color}">
+    <div class="right" style="flex: {secondFlex}; background: {secondColor}">
+        <slot name="second"></slot>
     </div>
 </div>  
