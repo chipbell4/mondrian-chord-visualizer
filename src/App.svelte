@@ -1,5 +1,5 @@
 <script>
-import HorizontalDivider from "./HorizontalDivider.svelte";
+import Divider from "./Divider.svelte";
 </script>
 
 <style>
@@ -11,6 +11,6 @@ import HorizontalDivider from "./HorizontalDivider.svelte";
 
 <main>
     <div class="container">
-        <HorizontalDivider />
+        <Divider />
     </div>
 </main>
