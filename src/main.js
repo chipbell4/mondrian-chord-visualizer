@@ -1,26 +1,26 @@
 import App from './App.svelte';
-import { Generator } from './synth/Generator';
+import { Pad } from './synth/Pad';
 
 const app = new App({
     target: document.getElementById("app"),
 });
 
 let context = undefined;
-let generator;
+let pad;
 let noteIsOn = false;
 
 document.addEventListener("click", () => {
     // only create the oscillator the first time through
     if (context === undefined) {
         context = new AudioContext();
-        generator = new Generator(context);
+        pad = new Pad(context);
     }
     
     if (!noteIsOn) {
-        generator.play([220, 220 * 4 / 3, 220 * 3 / 2]);
+        pad.play([220, 220 * 4 / 3, 220 * 3 / 2]);
         noteIsOn = true;
     } else {
-        generator.noteOff();
+        pad.noteOff();
         noteIsOn = false;
     }
     

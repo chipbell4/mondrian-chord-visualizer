@@ -1,7 +1,7 @@
 import { Lfo } from "./Lfo";
 import { PolyphonicVoice } from "./PolyphonicVoice";
 
-export class Generator {
+export class Pad {
     context: AudioContext;
 
     voice: PolyphonicVoice;
