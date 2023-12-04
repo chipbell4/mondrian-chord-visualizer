@@ -5,10 +5,15 @@ const app = new App({
     target: document.getElementById("app"),
 });
 
+let context = undefined;
+let generator;
+
 document.addEventListener("click", () => {
-    console.log("HELLO!");
-    const context = new AudioContext();
-    const generator = new Generator(context);
+    // only create the oscillator the first time through
+    if (context === undefined) {
+        context = new AudioContext();
+        generator = new Generator(context);
+    }
     
     generator.noteOn(220);
 });
