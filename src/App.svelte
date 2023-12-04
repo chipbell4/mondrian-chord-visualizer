@@ -1,5 +1,10 @@
 <script>
 import Divider from "./Divider.svelte";
+
+const onRescale = (event) => {
+    console.log(event);
+};
+
 </script>
 
 <style>
@@ -11,6 +16,6 @@ import Divider from "./Divider.svelte";
 
 <main>
     <div class="container">
-        <Divider />
+        <Divider on:rescale={onRescale} />
     </div>
 </main>

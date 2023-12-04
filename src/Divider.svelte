@@ -1,4 +1,6 @@
 <script>
+import { createEventDispatcher } from 'svelte';
+
 import { MONDRIAN_BLUE, MONDRIAN_RED, MONDRIAN_YELLOW } from "./colors";
 import { HORIZONTAL, VERTICAL } from "./divider_direction";
 
@@ -12,6 +14,8 @@ export let config = {
         children: null,
     }
 }
+
+const dispatch = createEventDispatcher();
 
 let container;
 let divider;
@@ -47,6 +51,11 @@ const moveDivider = (e) => {
         firstFlex = desiredDividerPosition;
         secondFlex = containerRect.width - 20 - desiredDividerPosition;
     }
+
+    dispatch("rescale", {
+        first: firstFlex,
+        second: secondFlex,
+    });
 };
 
 </script>
