@@ -7,6 +7,7 @@ const app = new App({
 
 let context = undefined;
 let generator;
+let noteIsOn = false;
 
 document.addEventListener("click", () => {
     // only create the oscillator the first time through
@@ -15,7 +16,14 @@ document.addEventListener("click", () => {
         generator = new Generator(context);
     }
     
-    generator.noteOn(220);
+    if (!noteIsOn) {
+        generator.noteOn(220);
+        noteIsOn = true;
+    } else {
+        generator.noteOff();
+        noteIsOn = false;
+    }
+    
 });
 
 

@@ -28,11 +28,15 @@ export class Generator {
 
     noteOn(frequency: number) {
         // Cancel any previous note on
-        this.adsrGain.gain.cancelScheduledValues(0);
-        this.adsrGain.gain.value = 0;
+        this.noteOff();
 
         // Reschedule a fade in
         const ATTACK = 0.75;
         this.adsrGain.gain.linearRampToValueAtTime(1.0, this.context.currentTime + ATTACK);
+    }
+
+    noteOff() {
+        this.adsrGain.gain.cancelScheduledValues(0);
+        this.adsrGain.gain.value = 0;
     }
 }
