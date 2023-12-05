@@ -1,4 +1,4 @@
-<script>
+<script lang="typescript">
 import { createEventDispatcher } from 'svelte';
 
 import { MONDRIAN_BLUE, MONDRIAN_RED, MONDRIAN_YELLOW } from "./colors";
@@ -34,7 +34,7 @@ function buildRescaleEvent(config) {
     }
 
     if (config.second.children) {
-        event.second.children = buildEvent(config.second.children);
+        event.second.children = buildRescaleEvent(config.second.children);
     }
 
     return event;
