@@ -38,15 +38,17 @@ function randomColor(): string {
 }
 
 export function pairToDividerConfig(first: number, second: number): DividerConfig {
+    const total = (1 / first) + (1 / second);
+
     return {
         direction: randomDirection(),
         first: {
             color: randomColor(),
-            weight: 1 / first,
+            weight: 1 / (first * total),
         },
         second: {
             color: randomColor(),
-            weight: 1 / second,
+            weight: 1 / (second * total),
         }
     };
 }
