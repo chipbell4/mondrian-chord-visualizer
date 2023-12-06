@@ -38,7 +38,6 @@ export class Voice {
     set frequency(f: number) {
         for (let i = 0; i < this.config.voices; i++) {
             const halfSteps = 2 * this.config.detune * ((i / this.config.voices) - 0.5) / this.config.voices;
-            console.log(halfSteps);
             const frequency = f * Math.pow(2, halfSteps / 12);
             this.oscillators[i].frequency.value = frequency;
         }

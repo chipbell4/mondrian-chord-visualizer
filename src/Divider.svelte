@@ -9,6 +9,7 @@ export let config = {
     first: {
         color: MONDRIAN_BLUE,
         weight: 1,
+        children: null,
     },
     second: {
         color: MONDRIAN_RED,
@@ -58,12 +59,11 @@ let dividerClicked = false;
 let offset = 0;
 const markDividerClicked = (e) => {
     dividerClicked = true;
-    if (config.direction === VERTICAL) {
+    if (config.direction === HORIZONTAL) {
         offset = e.clientY - divider.getBoundingClientRect().top;
     } else {
         offset = e.clientX - divider.getBoundingClientRect().left;
     }
-    
 }
 const markDividerUnclicked = () => dividerClicked = false;
 const moveDivider = (e) => {
@@ -72,8 +72,9 @@ const moveDivider = (e) => {
     }
 
     const containerRect = container.getBoundingClientRect();
+    console.log(`container dimensions ${containerRect.width}, ${containerRect.top}`);
 
-    if (config.direction === VERTICAL) {
+    if (config.direction === HORIZONTAL) {
         const desiredDividerPosition = e.clientY - offset;
         config.first.weight = desiredDividerPosition;
         config.second.weight = containerRect.height - 20 - desiredDividerPosition;
@@ -85,6 +86,7 @@ const moveDivider = (e) => {
 
     rescaleEvent.first.weight = config.first.weight;
     rescaleEvent.second.weight = config.second.weight;
+    console.log(`Weights are ${config.first.weight} ${config.second.weight}`);
     dispatch("rescale", rescaleEvent);
 };
 
@@ -100,7 +102,7 @@ const moveDivider = (e) => {
     -webkit-user-select: none;
 }
 
-.container.VERTICAL {
+.container.HORIZONTAL {
     flex-direction: column;
 
     > .divider {
@@ -109,7 +111,7 @@ const moveDivider = (e) => {
     }
 }
 
-.container.HORIZONTAL {
+.container.VERTICAL {
     flex-direction: row;
 
     > .divider {
