@@ -72,21 +72,22 @@ const moveDivider = (e) => {
     }
 
     const containerRect = container.getBoundingClientRect();
-    console.log(`container dimensions ${containerRect.width}, ${containerRect.top}`);
+
+    const localX = e.clientX - containerRect.left;
+    const localY = e.clientY - containerRect.top;
 
     if (config.direction === HORIZONTAL) {
-        const desiredDividerPosition = e.clientY - offset;
+        const desiredDividerPosition = localY - offset;
         config.first.weight = desiredDividerPosition;
         config.second.weight = containerRect.height - 20 - desiredDividerPosition;
     } else {
-        const desiredDividerPosition = e.clientX - offset;
+        const desiredDividerPosition = localX - offset;
         config.first.weight = desiredDividerPosition;
         config.second.weight = containerRect.width - 20 - desiredDividerPosition;
     }
 
     rescaleEvent.first.weight = config.first.weight;
     rescaleEvent.second.weight = config.second.weight;
-    console.log(`Weights are ${config.first.weight} ${config.second.weight}`);
     dispatch("rescale", rescaleEvent);
 };
 
