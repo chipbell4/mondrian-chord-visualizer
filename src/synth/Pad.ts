@@ -42,9 +42,6 @@ export class Pad {
     }
 
     play(frequencies: number[]) {
-        // Cancel any previous note on
-        this.pause();
-
         // set the next notes
         this.voice.frequencies = frequencies;
 
