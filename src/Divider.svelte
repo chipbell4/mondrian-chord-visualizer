@@ -2,7 +2,7 @@
 import { onMount } from "svelte";
 import { MONDRIAN_BLUE, MONDRIAN_RED } from "./colors";
 import { HORIZONTAL } from "./divider_direction";
-import { updateChordArea } from "./stores/chord-store";
+import { currentChord } from "./stores/chord-store";
 
 export let config = {
     direction: HORIZONTAL,
@@ -68,14 +68,14 @@ onMount(() => {
             const label = entry.target.classList.contains("left") ? config.first.label : config.second.label;
             const area = entry.contentRect.width * entry.contentRect.height;
 
-            updateChordArea(label, area);
+            currentChord.updateChordArea(label, area);
         }
     });
 
     if (!config.first.children) {
         // Report area initially as well
         const rect = first.getBoundingClientRect();
-        updateChordArea(config.first.label, rect.width * rect.height);
+        currentChord.updateChordArea(config.first.label, rect.width * rect.height);
 
         observer.observe(first);
     }
@@ -83,7 +83,7 @@ onMount(() => {
     if (!config.second.children) {
         // report area initially as well
         const rect = second.getBoundingClientRect();
-        updateChordArea(config.second.label, rect.width * rect.height);
+        currentChord.updateChordArea(config.second.label, rect.width * rect.height);
 
         observer.observe(second);
     }

@@ -1,34 +1,64 @@
-import { writable } from "svelte/store";
-import { MAJOR_THIRTEEN } from "../synth/chords";
+import { derived } from "svelte/store";
 
-type ChordAreaSubscriber = (label: string, area: number) => void;
+type ChordState = Record<string, number>;
+type ChordStateSubscriber = (state: ChordState) => void;
 
-const subscribers: ChordAreaSubscriber[] = [];
+export class ChordStore {
+    state: ChordState = {};
+    labels: string[] = [];
+    subscribers: ChordStateSubscriber[] = [];
 
-let cache: Record<string, number> = {};
-let labels: string[] = [];
+    get isReady(): boolean {
+        return this.labels.length !== 0 && this.labels.every((label) => this.state[label] !== undefined);
+    }
 
-export function setListOfLabels(newList: string[]) {
-    labels = newList;
-    cache = {}; // clear the cache
-}
+    set chordLabels(labels: string[]) {
+        this.labels = labels;
+    }
 
-export function cacheIsReady(): boolean {
-    return labels.every((label) => cache[label] !== undefined);
-}
+    subscribe(subscription: ChordStateSubscriber): () => void {
+        this.subscribers.push(subscription);
 
-export function onChordAreaChanged(subscriber: ChordAreaSubscriber) {
-    subscribers.push(subscriber);
-}
+        return this.unsubscribe.bind(this, subscription);
+    }
 
-export function updateChordArea(label: string, area: number) {
-    cache[label] = area;
+    unsubscribe(subscription: ChordStateSubscriber) {
+        const index = this.subscribers.indexOf(subscription);
+        if (index >= 0) {
+            this.subscribers.splice(index, 1);
+        }
+    }
 
-    for (const subscriber of subscribers) {
-        subscriber(label, area);
+    updateChordArea(label: string, area: number) {
+        this.state[label] = area;
+
+        if (!this.isReady) {
+            return;
+        }
+
+        for (const subscriber of this.subscribers) {
+            subscriber(this.state);
+        }
     }
 }
 
-export function getCache() {
-    return cache;
-}
+export const currentChord = new ChordStore();
+
+export const currentFrequencies = derived(currentChord, ($state: ChordState) => {
+    if ($state === undefined || $state.root === undefined) {
+        return [];
+    }
+
+    const root = $state.root;
+    const otherKeys = Object.keys($state).filter(key => key !== "root");
+
+    const frequencies = [256];
+    for (const toneLabel of otherKeys) {
+        const ratio = root / $state[toneLabel];
+        frequencies.push(ratio * 256);
+    }
+
+    console.log(frequencies);
+
+    return frequencies;
+});

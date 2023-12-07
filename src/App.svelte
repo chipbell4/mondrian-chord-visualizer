@@ -1,30 +1,14 @@
 <script>
 import Divider from "./Divider.svelte";
 import { chordToDividerConfig } from "./config_mapping";
-import { MAJOR_THIRTEEN } from "./synth/chords";
-import { onChordAreaChanged, cacheIsReady, getCache, setListOfLabels } from "./stores/chord-store";
+import { MAJOR_THIRTEEN, MAJOR_SEVEN } from "./synth/chords";
+import { currentChord, currentFrequencies } from "./stores/chord-store";
 import * as player from "./synth/player";
 
-onChordAreaChanged(() => {
-    if (!cacheIsReady()) {
-        return;
-    }
+const initialConfig = chordToDividerConfig(MAJOR_SEVEN);
+currentChord.chordLabels = MAJOR_SEVEN.map(tone => tone.label);
 
-    const cache = getCache();
-    const root = cache.root;
-    const otherKeys = Object.keys(cache).filter(key => key !== "root");
-
-    const frequencies = [256];
-    for (const toneLabel of otherKeys) {
-        const ratio = root / cache[toneLabel];
-        frequencies.push(ratio * 256);
-    }
-
-    player.play(frequencies);
-});
-
-const initialConfig = chordToDividerConfig(MAJOR_THIRTEEN);
-setListOfLabels(MAJOR_THIRTEEN.map(tone => tone.label));
+currentFrequencies.subscribe((frequencies) => player.play(frequencies));
 </script>
 
 <style>
