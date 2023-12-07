@@ -2,12 +2,20 @@
 import Divider from "./Divider.svelte";
 import { chordToDividerConfig } from "./config_mapping";
 import { MAJOR_THIRTEEN } from "./synth/chords";
+import { onChordAreaChanged, cacheIsReady, getCache, setListOfLabels } from "./stores/chord-store";
 
-const onRescale = (event) => {
-    console.log(event.detail);
-};
+
+
+onChordAreaChanged(() => {
+    if (!cacheIsReady()) {
+        return;
+    }
+
+    console.log("CACHE IS READY:", getCache());
+});
 
 const initialConfig = chordToDividerConfig(MAJOR_THIRTEEN);
+setListOfLabels(MAJOR_THIRTEEN.map(tone => tone.label));
 </script>
 
 <style>
@@ -19,6 +27,6 @@ const initialConfig = chordToDividerConfig(MAJOR_THIRTEEN);
 
 <main>
     <div class="container">
-        <Divider config={initialConfig} on:rescale={onRescale} />
+        <Divider config={initialConfig} />
     </div>
 </main>

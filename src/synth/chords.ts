@@ -27,19 +27,26 @@ function revoice(chord: number[]): number[] {
     return revoiced;
 }
 
-export const MAJOR_SEVEN = [
-    1,
-    MAJOR_THIRD,
-    PERFECT_FIFTH,
-    MAJOR_SEVENTH,
+export interface ChordTone {
+    label: string;
+    ratio: number;
+}  
+
+export type Chord = ChordTone[];
+
+export const MAJOR_SEVEN: Chord = [
+    { label: "root", ratio: 1},
+    { label: "third", ratio: MAJOR_THIRD },
+    { label: "fifth", ratio: PERFECT_FIFTH},
+    { label: "seventh", ratio: MAJOR_SEVENTH},
 ]
 
-export const MAJOR_THIRTEEN = [
-    1,
-    MAJOR_THIRD,
-    PERFECT_FIFTH,
-    MINOR_SEVENTH,
-    OCTAVE * MAJOR_SECOND,
-    OCTAVE * TRITONE,
-    OCTAVE * MAJOR_SIXTH,
-]
+export const MAJOR_THIRTEEN: Chord = [
+    { label: "root", ratio: 1},
+    { label: "third", ratio: MAJOR_THIRD },
+    { label: "fifth", ratio: PERFECT_FIFTH},
+    { label: "seventh", ratio: MINOR_SEVENTH },
+    { label: "ninth", ratio: OCTAVE * MAJOR_SECOND },
+    { label: "sharp eleven", ratio: OCTAVE * TRITONE },
+    { label: "thirteen", ratio: OCTAVE * MAJOR_SIXTH },
+];

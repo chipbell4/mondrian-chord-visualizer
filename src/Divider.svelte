@@ -1,8 +1,8 @@
 <script lang="typescript">
-import { createEventDispatcher } from 'svelte';
-
-import { MONDRIAN_BLUE, MONDRIAN_RED, MONDRIAN_YELLOW } from "./colors";
-import { HORIZONTAL, VERTICAL } from "./divider_direction";
+import { onMount } from "svelte";
+import { MONDRIAN_BLUE, MONDRIAN_RED } from "./colors";
+import { HORIZONTAL } from "./divider_direction";
+import { updateChordArea } from "./stores/chord-store";
 
 export let config = {
     direction: HORIZONTAL,
@@ -17,40 +17,6 @@ export let config = {
         children: null,
     }
 }
-
-// Child rescale management
-const dispatch = createEventDispatcher();
-function buildRescaleEvent(config) {
-    const event = {
-        first: {
-            weight: config.first.weight,
-        },
-        second: {
-            weight: config.second.weight,
-        }
-    };
-
-    if (config.first.children) {
-        event.first.children = buildRescaleEvent(config.first.children);
-    }
-
-    if (config.second.children) {
-        event.second.children = buildRescaleEvent(config.second.children);
-    }
-
-    return event;
-};
-const rescaleEvent = buildRescaleEvent(config);
-
-function firstChildRescaled(event) {
-    rescaleEvent.first.children = event.detail;
-    dispatch("rescale", rescaleEvent);
-}
-
-function secondChildRescaled(event) {
-    rescaleEvent.first.children = event.detail;
-    dispatch("rescale", rescaleEvent);
-};
 
 // Divider Event Handler
 let container;
@@ -85,11 +51,48 @@ const moveDivider = (e) => {
         config.first.weight = desiredDividerPosition;
         config.second.weight = containerRect.width - 20 - desiredDividerPosition;
     }
-
-    rescaleEvent.first.weight = config.first.weight;
-    rescaleEvent.second.weight = config.second.weight;
-    dispatch("rescale", rescaleEvent);
 };
+
+// Handling resizes
+let first;
+let second;
+
+onMount(() => {
+    const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+            if (!entry.contentBoxSize) {
+                continue;
+            }
+
+            // figure out which label to use
+            const label = entry.target.classList.contains("left") ? config.first.label : config.second.label;
+            const area = entry.contentRect.width * entry.contentRect.height;
+
+            updateChordArea(label, area);
+        }
+    });
+
+    if (!config.first.children) {
+        // Report area initially as well
+        const rect = first.getBoundingClientRect();
+        updateChordArea(config.first.label, rect.width * rect.height);
+
+        observer.observe(first);
+    }
+    
+    if (!config.second.children) {
+        // report area initially as well
+        const rect = second.getBoundingClientRect();
+        updateChordArea(config.second.label, rect.width * rect.height);
+
+        observer.observe(second);
+    }
+
+    return () => {
+        observer.unobserve(first);
+        observer.unobserve(second);
+    }
+})
 
 </script>
 
@@ -135,9 +138,9 @@ const moveDivider = (e) => {
     on:mouseleave={markDividerUnclicked}
     on:mousemove={moveDivider}
     >
-    <div class="left" style="flex: {config.first.weight}; background: {config.first.color}">
+    <div class="left" style="flex: {config.first.weight}; background: {config.first.color}" bind:this={first}>
         {#if config.first.children !== null && config.first.children !== undefined}
-            <svelte:self config={config.first.children} on:rescale={firstChildRescaled} />
+            <svelte:self config={config.first.children} />
         {/if}
     </div>
     <div class="divider"
@@ -146,9 +149,9 @@ const moveDivider = (e) => {
         role="button"
         tabindex="0"
         ></div>
-    <div class="right" style="flex: {config.second.weight}; background: {config.second.color}">
+    <div class="right" style="flex: {config.second.weight}; background: {config.second.color}" bind:this={second}>
         {#if config.second.children !== null && config.second.children !== undefined}
-            <svelte:self config={config.second.children} on:rescale={secondChildRescaled} />
+            <svelte:self config={config.second.children} />
         {/if}
     </div>
 </div>  
