@@ -3,6 +3,7 @@ import Divider from "./Divider.svelte";
 import { chordToDividerConfig } from "./config_mapping";
 import { MAJOR_THIRTEEN } from "./synth/chords";
 import { onChordAreaChanged, cacheIsReady, getCache, setListOfLabels } from "./stores/chord-store";
+import * as player from "./synth/player";
 
 onChordAreaChanged(() => {
     if (!cacheIsReady()) {
@@ -19,8 +20,7 @@ onChordAreaChanged(() => {
         frequencies.push(ratio * 256);
     }
 
-    // TODO: Refactor to a derived store
-    console.log("Frequencies are :", frequencies);
+    player.play(frequencies);
 });
 
 const initialConfig = chordToDividerConfig(MAJOR_THIRTEEN);
