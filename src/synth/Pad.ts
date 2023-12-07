@@ -17,8 +17,8 @@ export class Pad {
             polyphony: 10,
             voiceConfig: {
                 voices: 8,
-                detune: 0.3,
-                type: "sawtooth",
+                detune: 0.001,
+                type: "sine",
             }
         });
 
