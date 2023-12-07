@@ -4,14 +4,23 @@ import { chordToDividerConfig } from "./config_mapping";
 import { MAJOR_THIRTEEN } from "./synth/chords";
 import { onChordAreaChanged, cacheIsReady, getCache, setListOfLabels } from "./stores/chord-store";
 
-
-
 onChordAreaChanged(() => {
     if (!cacheIsReady()) {
         return;
     }
 
-    console.log("CACHE IS READY:", getCache());
+    const cache = getCache();
+    const root = cache.root;
+    const otherKeys = Object.keys(cache).filter(key => key !== "root");
+
+    const frequencies = [256];
+    for (const toneLabel of otherKeys) {
+        const ratio = root / cache[toneLabel];
+        frequencies.push(ratio * 256);
+    }
+
+    // TODO: Refactor to a derived store
+    console.log("Frequencies are :", frequencies);
 });
 
 const initialConfig = chordToDividerConfig(MAJOR_THIRTEEN);
