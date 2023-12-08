@@ -47,11 +47,14 @@ export class Pad {
 
         // Reschedule a fade in
         const ATTACK = 0.75;
+        this.adsrGain.gain.cancelScheduledValues(this.context.currentTime);
         this.adsrGain.gain.linearRampToValueAtTime(1.0, this.context.currentTime + ATTACK);
     }
 
     pause() {
-        this.adsrGain.gain.cancelScheduledValues(0);
-        this.adsrGain.gain.value = 0;
+        const DECAY = 3.0;
+
+        this.adsrGain.gain.cancelScheduledValues(this.context.currentTime);
+        this.adsrGain.gain.linearRampToValueAtTime(0.0, this.context.currentTime + DECAY);
     }
 }

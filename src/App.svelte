@@ -1,10 +1,10 @@
 <script>
 import Divider from "./Divider.svelte";
 import { chordToDividerConfig } from "./config_mapping";
-import { MAJOR_THIRTEEN, MAJOR_SEVEN } from "./synth/chords";
+import { MAJOR_SEVEN } from "./synth/chords";
 import { currentChord, currentFrequencies } from "./stores/chord-store";
-import * as player from "./synth/player";
-    import ChordDisplay from "./ChordDisplay.svelte";
+import { player } from "./synth/player";
+import ChordDisplay from "./ChordDisplay.svelte";
 
 const initialConfig = chordToDividerConfig(MAJOR_SEVEN);
 currentChord.chordLabels = MAJOR_SEVEN.map(tone => tone.label);

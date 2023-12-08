@@ -10,8 +10,6 @@ document.addEventListener("click", () => {
         context = new AudioContext();
         pad = new Pad(context);
     }
-
-    playScheduledFrequencies();
 });
 
 function playScheduledFrequencies() {
@@ -29,7 +27,25 @@ function playScheduledFrequencies() {
     frequenciesScheduledToPlay = undefined;
 }
 
-export function play(frequencies: number[]) {
-    frequenciesScheduledToPlay = frequencies;
-    playScheduledFrequencies();
+export class NotePlayer {
+    currentTimer: number = -1;
+    isPlaying: boolean = false;
+
+    scheduleNoteOff() {
+        clearTimeout(this.currentTimer);
+        this.currentTimer = setTimeout(() => this.stopPlaying(), 1000);
+    }
+
+    stopPlaying() {
+        pad?.pause();
+    }
+
+    play(frequencies: number[]) {
+        frequenciesScheduledToPlay = frequencies;
+        playScheduledFrequencies();
+        this.scheduleNoteOff();
+    }
+
 }
+
+export const player = new NotePlayer();
