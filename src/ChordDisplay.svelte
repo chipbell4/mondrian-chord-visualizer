@@ -15,10 +15,10 @@ currentFrequencies.subscribe((frequencies) => {
 
     const renderer = new Renderer(container, Renderer.Backends.SVG);
 
-    renderer.resize(500, 500);
+    renderer.resize(115, 130);
     const context = renderer.getContext();
 
-    const stave = new Stave(10, 40, 400);
+    const stave = new Stave(0, 0, 110);
     stave.addClef("treble")
     stave.setContext(context).draw();
 
