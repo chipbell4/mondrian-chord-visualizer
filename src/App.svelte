@@ -5,6 +5,7 @@ import { MAJOR_SEVEN } from "./synth/chords";
 import { currentChord, currentFrequencies } from "./stores/chord-store";
 import { player } from "./synth/player";
 import ChordDisplay from "./ChordDisplay.svelte";
+    import Dialog from "./Dialog.svelte";
 
 const initialConfig = chordToDividerConfig(MAJOR_SEVEN);
 currentChord.chordLabels = MAJOR_SEVEN.map(tone => tone.label);
@@ -32,6 +33,7 @@ currentFrequencies.subscribe((frequencies) => player.play(frequencies));
 </style>
 
 <main>
+    <Dialog />
     <div class="container">
         <div class="divider-container">
             <Divider config={initialConfig} />

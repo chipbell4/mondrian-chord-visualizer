@@ -7,6 +7,7 @@ let frequenciesScheduledToPlay: number[] | undefined= undefined;
 document.addEventListener("click", () => {
     // only create the oscillator the first time through
     if (context === undefined) {
+        console.log("Setting up audio context");
         context = new AudioContext();
         pad = new Pad(context);
     }

@@ -1,8 +1,10 @@
 <script lang="typescript">
 import { onMount } from "svelte";
+import { get } from "svelte/store";
 import { MONDRIAN_BLUE, MONDRIAN_RED } from "./colors";
 import { HORIZONTAL } from "./divider_direction";
-import { currentChord } from "./stores/chord-store";
+import { currentChord, currentFrequencies } from "./stores/chord-store";
+import { player } from "./synth/player";
 
 export let config = {
     direction: HORIZONTAL,
@@ -30,6 +32,9 @@ const markDividerClicked = (e) => {
     } else {
         offset = e.clientX - divider.getBoundingClientRect().left;
     }
+
+    const frequencies = get(currentFrequencies);
+    player.play(frequencies);
 }
 const markDividerUnclicked = () => dividerClicked = false;
 const moveDivider = (e) => {
