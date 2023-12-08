@@ -125,9 +125,11 @@ onMount(() => {
 
 .divider {
     background: #111;
+    cursor: grab;
 
     &:active {
         background: #222;
+        cursor: grabbing;
     }
 }
 </style>
