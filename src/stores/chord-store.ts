@@ -58,7 +58,5 @@ export const currentFrequencies = derived(currentChord, ($state: ChordState) => 
         frequencies.push(ratio * 256);
     }
 
-    console.log(frequencies);
-
     return frequencies;
 });

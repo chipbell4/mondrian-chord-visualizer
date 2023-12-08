@@ -50,9 +50,6 @@ export function frequencyToPitchDescription(frequency: number): PitchDescription
 
     const partialDescription = descriptionsNoOctave[(quarterToneDistance + 48) % 24];
     const octave = Math.floor(quarterToneDistance / 24) + 4;
-    if (partialDescription === undefined) {
-        console.log(frequency);
-    }
 
     return {
         frequency,
