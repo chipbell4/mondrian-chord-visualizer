@@ -20,8 +20,8 @@ currentFrequencies.subscribe((frequencies) => player.play(frequencies));
 </style>
 
 <main>
+    <ChordDisplay />
     <div class="container">
         <Divider config={initialConfig} />
     </div>
-    <ChordDisplay />
 </main>
