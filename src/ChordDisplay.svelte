@@ -1,5 +1,4 @@
 <script>
-import { onMount } from "svelte";
 import { Renderer, Stave, Formatter, Voice } from "vexflow";
 
 import { currentFrequencies } from "./stores/chord-store";
