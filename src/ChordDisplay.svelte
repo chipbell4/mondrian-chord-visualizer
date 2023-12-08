@@ -6,24 +6,22 @@ import { currentFrequencies } from "./stores/chord-store";
 import { chordToStaveNote } from "./frequency-mapping";
 
 let container;
-let context;
-let stave;
 
-onMount(() => {
+currentFrequencies.subscribe((frequencies) => {
+    if (container === undefined) {
+        return;
+    }
+
+    container.innerHTML = "";
+
     const renderer = new Renderer(container, Renderer.Backends.SVG);
 
     renderer.resize(500, 500);
-    context = renderer.getContext();
+    const context = renderer.getContext();
 
-    stave = new Stave(10, 40, 400);
+    const stave = new Stave(10, 40, 400);
     stave.addClef("treble")
     stave.setContext(context).draw();
-});
-
-currentFrequencies.subscribe((frequencies) => {
-    if (!context || !stave) {
-        return;
-    }
 
     // Create the notes
     const notes = [
