@@ -15,25 +15,29 @@ currentFrequencies.subscribe((frequencies) => player.play(frequencies));
 <style>
     .container {
         display: flex;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto
     }
 
     .chord-display-container {
+        padding-left: 2em;
         flex: 1;
     }
 
     .divider-container {
-        flex: 1;
+        flex: 2;
         aspect-ratio: 1/1;
     }
 </style>
 
 <main>
     <div class="container">
-        <div class="chord-display-container">
-            <ChordDisplay />
-        </div>
         <div class="divider-container">
             <Divider config={initialConfig} />
+        </div>
+        <div class="chord-display-container">
+            <ChordDisplay />
         </div>
     </div>
 </main>
