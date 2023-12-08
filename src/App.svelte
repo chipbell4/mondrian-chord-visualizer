@@ -22,7 +22,7 @@ currentFrequencies.subscribe((frequencies) => player.play(frequencies));
     }
 
     .divider-container {
-        flex: 5;
+        flex: 1;
         aspect-ratio: 1/1;
     }
 </style>
